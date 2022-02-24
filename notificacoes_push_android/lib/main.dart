@@ -18,9 +18,9 @@ void main() async {
 
       doWhenWindowReady(() {
         final win = appWindow;
-        win.minSize = const Size(410, 540);
-        win.size = const Size(410, 540);
-        win.maxSize = const Size(410, 540);
+        // win.minSize = const Size(410, 540);
+        // win.size = const Size(410, 540);
+        // win.maxSize = const Size(410, 540);
         win.alignment = Alignment.center;
         win.title = 'Envio de Notificações';
         win.show();

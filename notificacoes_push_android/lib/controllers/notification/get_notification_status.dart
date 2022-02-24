@@ -1,7 +1,6 @@
-enum NotificationStatus {
+enum GetNotificationStatus {
   empty,
   loading,
   success,
   error,
-  camposVazios,
 }

@@ -40,6 +40,8 @@ dependencies:
   http: ^0.13.4
   bitsdojo_window: ^0.1.1+1
   msix: ^3.2.0
+  sqflite: ^2.0.2
+  sqflite_common_ffi: ^2.1.0+2
 
 dev_dependencies:
   flutter_test:
