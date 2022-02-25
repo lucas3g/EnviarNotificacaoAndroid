@@ -30,8 +30,7 @@ class NotificationController extends ChangeNotifier {
       notifyListeners();
       final postUrl = 'https://fcm.googleapis.com/fcm/send';
 
-      final apiKey =
-          'AAAAN83oFLA:APA91bFKuxMQfbd97SYgJivNR3x8HHRedDi70_9_POimnNzZl5wZeSud85eehNjVpf2u1cSj6_aVs0qvBfikxbeyc1a5LBa5yAHffwMcRiTl6e4kI2F5xClANTQHMBH1RE5oUCRJNIiQ';
+      final apiKey = 'API-KEY';
 
       final headers = {
         'content-type': 'application/json',
