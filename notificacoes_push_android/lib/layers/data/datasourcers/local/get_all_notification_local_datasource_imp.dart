@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 class GetAllNotificationLocalDataSourceImp
     implements GetAllNotificationDataSource {
   late Database db;
+
   @override
   Future<List<NotificationDto>> call() async {
     try {
@@ -21,11 +22,7 @@ class GetAllNotificationLocalDataSourceImp
         if (allNotification.isNotEmpty) {
           for (var item in allNotification) {
             notificationDto.add(
-              NotificationDto(
-                id: item['id'],
-                title: item['title'],
-                description: item['description'],
-              ),
+              NotificationDto.fromMap(item),
             );
           }
         }

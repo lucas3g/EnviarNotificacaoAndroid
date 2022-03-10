@@ -1,13 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as mt;
-import 'package:notificacoes_push_android/layers/data/datasourcers/get_all_notification_datasource.dart';
-import 'package:notificacoes_push_android/layers/data/datasourcers/local/get_all_notification_local_datasource_imp.dart';
-import 'package:notificacoes_push_android/layers/data/repositories/create_notification_repository_imp.dart';
-import 'package:notificacoes_push_android/layers/data/repositories/get_all_notification_repository_imp.dart';
-import 'package:notificacoes_push_android/layers/domain/repositories/get_all_notification_repository.dart';
-import 'package:notificacoes_push_android/layers/domain/usecases/create_notification/create_notification_usecase_imp.dart';
-import 'package:notificacoes_push_android/layers/domain/usecases/get_all_notification/get_all_notificatin_usecase.dart';
-import 'package:notificacoes_push_android/layers/domain/usecases/get_all_notification/get_all_notificatin_usecase_imp.dart';
+import 'package:get_it/get_it.dart';
 import 'package:notificacoes_push_android/layers/presentation/controllers/notification_controller.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,16 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final controller = NotificationController(
-    GetAllNotificationUseCaseImp(
-      GetAllNotificationRepositoryImp(
-        GetAllNotificationLocalDataSourceImp(),
-      ),
-    ),
-    CreateNotificationUseCaseImp(
-      CreateNotificationRepositoryImp(),
-    ),
-  );
+  final controller = GetIt.I.get<NotificationController>();
 
   final GlobalKey<FormState> keyTitulo = GlobalKey<FormState>();
   final GlobalKey<FormState> keyDesc = GlobalKey<FormState>();
