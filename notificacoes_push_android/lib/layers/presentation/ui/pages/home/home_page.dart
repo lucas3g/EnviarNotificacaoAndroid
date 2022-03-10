@@ -27,24 +27,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     getAllNotifications();
-
-    controller.addListener(() async {
-      setState(() {});
-      // if (controller.status == NotificationStatus.camposVazios) {
-      //   mostraAlerta(
-      //       titulo: 'Por favor preencher todos os campos',
-      //       descricao: 'Titulo e Descrição');
-      // } else if (controller.status == NotificationStatus.error) {
-      //   mostraAlerta(
-      //       titulo: 'Opsss...',
-      //       descricao: 'Não consegui enviar a notificação. Tente novamente.');
-      // } else if (controller.status == NotificationStatus.success) {
-      //   mostraAlerta(
-      //       titulo: 'Sucesso',
-      //       descricao: 'Notificação enviada!',
-      //       textBotao: 'Obrigado :)');
-      // }
-    });
   }
 
   void mostraAlerta(
@@ -166,7 +148,9 @@ class _HomePageState extends State<HomePage> {
                       keyDesc.currentState!.save();
 
                       if (await controller.createNotification()) {
-                        print('criou');
+                        setState(() {
+                          getAllNotifications();
+                        });
                       } else {
                         print('nao criou');
                       }
@@ -202,7 +186,15 @@ class _HomePageState extends State<HomePage> {
                                 .listNotificationEntity[index].description),
                             trailing: GestureDetector(
                               child: Icon(FluentIcons.delete),
-                              onTap: () async {},
+                              onTap: () async {
+                                await controller.deleteNotification(
+                                  id: controller
+                                      .listNotificationEntity[index].id,
+                                );
+                                setState(() {
+                                  getAllNotifications();
+                                });
+                              },
                             ),
                           );
                         },

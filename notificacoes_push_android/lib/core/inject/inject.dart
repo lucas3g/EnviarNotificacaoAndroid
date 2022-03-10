@@ -1,14 +1,20 @@
 import 'package:get_it/get_it.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/create_notification_datasource/create_notification_datasource.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/create_notification_datasource/local/create_notification_local_datasource_imp.dart';
+import 'package:notificacoes_push_android/layers/data/datasourcers/delete_notification_datasource/delete_notification_datasource.dart';
+import 'package:notificacoes_push_android/layers/data/datasourcers/delete_notification_datasource/local/delete_notification_local_datasource_imp.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/get_all_notification_datasource/get_all_notification_datasource.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/get_all_notification_datasource/local/get_all_notification_local_datasource_imp.dart';
 import 'package:notificacoes_push_android/layers/data/repositories/create_notification_repository_imp.dart';
+import 'package:notificacoes_push_android/layers/data/repositories/delete_notification_repository_imp.dart';
 import 'package:notificacoes_push_android/layers/data/repositories/get_all_notification_repository_imp.dart';
 import 'package:notificacoes_push_android/layers/domain/repositories/create_notification_repository.dart';
+import 'package:notificacoes_push_android/layers/domain/repositories/delete_notification_repository.dart';
 import 'package:notificacoes_push_android/layers/domain/repositories/get_all_notification_repository.dart';
 import 'package:notificacoes_push_android/layers/domain/usecases/create_notification/create_notification_usecase.dart';
 import 'package:notificacoes_push_android/layers/domain/usecases/create_notification/create_notification_usecase_imp.dart';
+import 'package:notificacoes_push_android/layers/domain/usecases/delete_notification/delete_notification_usecase.dart';
+import 'package:notificacoes_push_android/layers/domain/usecases/delete_notification/delete_notification_usecase_imp.dart';
 import 'package:notificacoes_push_android/layers/domain/usecases/get_all_notification/get_all_notificatin_usecase.dart';
 import 'package:notificacoes_push_android/layers/domain/usecases/get_all_notification/get_all_notificatin_usecase_imp.dart';
 import 'package:notificacoes_push_android/layers/presentation/controllers/notification_controller.dart';
@@ -24,6 +30,9 @@ class Inject {
     getIt.registerLazySingleton<CreateNotificationDataSource>(
       () => CreateNotificationLocalDataSourceImp(),
     );
+    getIt.registerLazySingleton<DeleteNotificationDataSource>(
+      () => DeleteNotificationLocalDataSourceImp(),
+    );
 
     //REPOSITORIES
     getIt.registerLazySingleton<GetAllNotificationRepository>(
@@ -31,6 +40,9 @@ class Inject {
     );
     getIt.registerLazySingleton<CreateNotificationRepository>(
       () => CreateNotificationRepositoryImp(getIt()),
+    );
+    getIt.registerLazySingleton<DeleteNotificationRepository>(
+      () => DeleteNotificationRepositoryImp(getIt()),
     );
 
     //USECASES
@@ -40,22 +52,13 @@ class Inject {
     getIt.registerLazySingleton<CreateNotificationUseCase>(
       () => CreateNotificationUseCaseImp(getIt()),
     );
+    getIt.registerLazySingleton<DeleteNotificationUseCase>(
+      () => DeleteNotificationUseCaseImp(getIt()),
+    );
 
     //CONTROLLERS
     getIt.registerSingleton<NotificationController>(
-      NotificationController(getIt(), getIt()),
+      NotificationController(getIt(), getIt(), getIt()),
     );
   }
 }
-
-
-// final controller = NotificationController(
-//     GetAllNotificationUseCaseImp(
-//       GetAllNotificationRepositoryImp(
-//         GetAllNotificationLocalDataSourceImp(),
-//       ),
-//     ),
-//     CreateNotificationUseCaseImp(
-//       CreateNotificationRepositoryImp(),
-//     ),
-//   );
