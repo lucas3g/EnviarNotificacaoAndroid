@@ -1,8 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as mt;
+import 'package:notificacoes_push_android/controllers/delete_notification/delete_notification_status.dart';
 import 'package:notificacoes_push_android/controllers/notification/notification_controller.dart';
 import 'package:notificacoes_push_android/controllers/notification/notification_status.dart';
 
+import '../../controllers/delete_notification/delete_notification_controller.dart';
 import '../../controllers/notification/get_notification_status.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final controller = NotificationController();
+  final controllerDelete = DeleteNotificationController();
   final GlobalKey<FormState> keyTitulo = GlobalKey<FormState>();
   final GlobalKey<FormState> keyDesc = GlobalKey<FormState>();
   final tituloController = TextEditingController();
@@ -42,9 +45,13 @@ class _HomePageState extends State<HomePage> {
       } else if (controller.status == NotificationStatus.success) {
         mostraAlerta(
             titulo: 'Sucesso',
-            descricao: 'Notificação envida!',
+            descricao: 'Notificação enviada!',
             textBotao: 'Obrigado :)');
       }
+    });
+
+    controllerDelete.addListener(() async {
+      setState(() {});
     });
   }
 
@@ -109,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       placeholder: 'Título da Notificação',
                       onSaved: (value) {
-                        controller.titulo = value!;
+                        controller.title = value!;
                       },
                       prefix: const Padding(
                         padding: EdgeInsetsDirectional.only(start: 8.0),
@@ -133,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                       maxLines: null,
                       minLines: 1,
                       onSaved: (value) {
-                        controller.descricao = value!;
+                        controller.description = value!;
                       },
                       prefix: const Padding(
                         padding: EdgeInsetsDirectional.only(start: 8.0),
@@ -185,35 +192,37 @@ class _HomePageState extends State<HomePage> {
               Row(
                 children: [
                   mt.VerticalDivider(),
-                  controller.getStatus == GetNotificationStatus.success
+                  controllerDelete.status == DeleteNotificationStatus.success ||
+                          controller.getStatus == GetNotificationStatus.success
                       ? Expanded(
                           child: Container(
                             child: ListView.separated(
-                                itemBuilder: (_, int index) {
-                                  return mt.ListTile(
-                                    onTap: () {
-                                      tituloController.text = controller
-                                          .notifications[index].title!;
-                                      descricaoController.text = controller
-                                          .notifications[index].description!;
+                              itemBuilder: (_, int index) {
+                                return mt.ListTile(
+                                  onTap: () {
+                                    tituloController.text =
+                                        controller.notifications[index].title!;
+                                    descricaoController.text = controller
+                                        .notifications[index].description!;
+                                  },
+                                  title: Text(
+                                      controller.notifications[index].title!),
+                                  subtitle: Text(controller
+                                      .notifications[index].description!),
+                                  trailing: GestureDetector(
+                                    child: Icon(FluentIcons.delete),
+                                    onTap: () async {
+                                      await controllerDelete.deleteNotification(
+                                        id: controller.notifications[index].id!,
+                                        controller: controller,
+                                      );
                                     },
-                                    title: Text(
-                                        controller.notifications[index].title!),
-                                    subtitle: Text(controller
-                                        .notifications[index].description!),
-                                    trailing: GestureDetector(
-                                      child: Icon(FluentIcons.delete),
-                                      onTap: () async {
-                                        await controller.deleteNotification(
-                                            id: controller
-                                                .notifications[index].id!);
-                                      },
-                                    ),
-                                  );
-                                },
-                                separatorBuilder: (_, __) =>
-                                    SizedBox(height: 10),
-                                itemCount: controller.notifications.length),
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (_, __) => SizedBox(height: 10),
+                              itemCount: controller.notifications.length,
+                            ),
                           ),
                         )
                       : Expanded(

@@ -4,23 +4,23 @@ import 'package:notificacoes_push_android/controllers/notification/get_notificat
 import 'dart:convert';
 
 import 'package:notificacoes_push_android/controllers/notification/notification_status.dart';
-import 'package:notificacoes_push_android/database/db.dart';
 import 'package:notificacoes_push_android/models/notification_model.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:notificacoes_push_android/usecase/notification_usecase.dart';
 
 class NotificationController extends ChangeNotifier {
-  late Database db;
-  late String titulo = '';
-  late String descricao = '';
+  late String title = '';
+  late String description = '';
 
   List<NotificationModel> notifications = [];
 
   NotificationStatus status = NotificationStatus.empty;
   GetNotificationStatus getStatus = GetNotificationStatus.empty;
 
+  final NotificationUseCase notificationUseCase = NotificationUseCase();
+
   Future<void> enviarNotificacao() async {
     try {
-      if (titulo.isEmpty || descricao.isEmpty) {
+      if (title.isEmpty || description.isEmpty) {
         status = NotificationStatus.camposVazios;
         notifyListeners();
         return;
@@ -30,7 +30,8 @@ class NotificationController extends ChangeNotifier {
       notifyListeners();
       final postUrl = 'https://fcm.googleapis.com/fcm/send';
 
-      final apiKey = 'API-KEY';
+      final apiKey =
+          'AAAAN83oFLA:APA91bFKuxMQfbd97SYgJivNR3x8HHRedDi70_9_POimnNzZl5wZeSud85eehNjVpf2u1cSj6_aVs0qvBfikxbeyc1a5LBa5yAHffwMcRiTl6e4kI2F5xClANTQHMBH1RE5oUCRJNIiQ';
 
       final headers = {
         'content-type': 'application/json',
@@ -39,7 +40,7 @@ class NotificationController extends ChangeNotifier {
 
       final data = {
         "to": "/topics/all",
-        "notification": {"title": titulo, "body": descricao}
+        "notification": {"title": title, "body": description}
       };
 
       final response = await http.post(Uri.parse(postUrl),
@@ -48,16 +49,13 @@ class NotificationController extends ChangeNotifier {
           headers: headers);
 
       if (response.statusCode == 200) {
-        // on success do sth
         print('Notificação enviada!');
         status = NotificationStatus.success;
-        await addNotification();
-        notifyListeners();
+        await createNotification();
       } else {
         print('Erro ao Enviar Notificação');
         status = NotificationStatus.error;
         notifyListeners();
-        // on failure do sth
       }
     } catch (e) {
       print('EU SOU ERRO $e');
@@ -67,66 +65,21 @@ class NotificationController extends ChangeNotifier {
   }
 
   Future<void> getAllNotifications() async {
-    try {
-      getStatus = GetNotificationStatus.loading;
-      db = await DB.instance.db;
-
-      notifications.clear();
-
-      await db.transaction((txn) async {
-        final List allNotification = await txn.query(
-          'notifications',
-        );
-
-        if (allNotification.isNotEmpty) {
-          for (var item in allNotification) {
-            notifications.add(
-              NotificationModel(
-                id: item['id'],
-                title: item['title'],
-                description: item['description'],
-              ),
-            );
-          }
-        }
-      });
-      getStatus = GetNotificationStatus.success;
-    } catch (e) {
-      getStatus = GetNotificationStatus.error;
-    }
+    getStatus = GetNotificationStatus.loading;
+    notifications.clear();
+    await notificationUseCase.list(notifications: notifications);
+    getStatus = GetNotificationStatus.success;
   }
 
-  Future<void> addNotification() async {
-    try {
-      db = await DB.instance.db;
-
-      await db.transaction((txn) async {
-        await txn.insert('notifications', {
-          'title': titulo,
-          'description': descricao,
-        });
-      });
-
+  Future<void> createNotification() async {
+    status = NotificationStatus.loading;
+    if (await notificationUseCase.create(
+        title: title, description: description)) {
       await getAllNotifications();
-    } catch (e) {
-      print('GET NOTIFICATIONS ERROR $e');
+      status = NotificationStatus.success;
+    } else {
+      status = NotificationStatus.error;
     }
-  }
-
-  Future<void> deleteNotification({required int id}) async {
-    try {
-      db = await DB.instance.db;
-
-      await db.transaction((txn) async {
-        await txn.delete('notifications', where: 'id = ?', whereArgs: [id]);
-      });
-
-      await getAllNotifications();
-
-      notifyListeners();
-    } catch (e) {
-      print('DELETE NOTIFICATIONS ERROR $e');
-      notifyListeners();
-    }
+    notifyListeners();
   }
 }
