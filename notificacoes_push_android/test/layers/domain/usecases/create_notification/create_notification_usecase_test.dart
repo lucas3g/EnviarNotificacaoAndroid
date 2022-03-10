@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notificacoes_push_android/layers/domain/entities/notification_entity.dart';
 import 'package:notificacoes_push_android/layers/domain/repositories/create_notification_repository.dart';
@@ -6,8 +7,9 @@ import 'package:notificacoes_push_android/layers/domain/usecases/create_notifica
 
 class CreateNotificationRepositoryImp implements CreateNotificationRepository {
   @override
-  Future<bool> call({required NotificationEntity notificationEntity}) async {
-    return true;
+  Future<Either<Exception, bool>> call(
+      {required NotificationEntity notificationEntity}) async {
+    return Right(true);
   }
 }
 
@@ -21,6 +23,10 @@ void main() {
 
     var result = await useCase(notificationEntity: notification);
 
-    expect(result, true);
+    late bool resulExpect;
+
+    result.fold((l) => false, (r) => resulExpect = r);
+
+    expect(resulExpect, true);
   });
 }

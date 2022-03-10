@@ -18,27 +18,33 @@ class _HomePageState extends State<HomePage> {
   final tituloController = TextEditingController();
   final descricaoController = TextEditingController();
 
+  Future<void> getAllNotifications() async {
+    await controller.getAllNotifications();
+  }
+
   @override
   void initState() {
     super.initState();
 
-    // controller.addListener(() async {
-    //   setState(() {});
-    //   if (controller.status == NotificationStatus.camposVazios) {
-    //     mostraAlerta(
-    //         titulo: 'Por favor preencher todos os campos',
-    //         descricao: 'Titulo e Descrição');
-    //   } else if (controller.status == NotificationStatus.error) {
-    //     mostraAlerta(
-    //         titulo: 'Opsss...',
-    //         descricao: 'Não consegui enviar a notificação. Tente novamente.');
-    //   } else if (controller.status == NotificationStatus.success) {
-    //     mostraAlerta(
-    //         titulo: 'Sucesso',
-    //         descricao: 'Notificação enviada!',
-    //         textBotao: 'Obrigado :)');
-    //   }
-    // });
+    getAllNotifications();
+
+    controller.addListener(() async {
+      setState(() {});
+      // if (controller.status == NotificationStatus.camposVazios) {
+      //   mostraAlerta(
+      //       titulo: 'Por favor preencher todos os campos',
+      //       descricao: 'Titulo e Descrição');
+      // } else if (controller.status == NotificationStatus.error) {
+      //   mostraAlerta(
+      //       titulo: 'Opsss...',
+      //       descricao: 'Não consegui enviar a notificação. Tente novamente.');
+      // } else if (controller.status == NotificationStatus.success) {
+      //   mostraAlerta(
+      //       titulo: 'Sucesso',
+      //       descricao: 'Notificação enviada!',
+      //       textBotao: 'Obrigado :)');
+      // }
+    });
   }
 
   void mostraAlerta(
@@ -101,8 +107,8 @@ class _HomePageState extends State<HomePage> {
                         return null;
                       },
                       placeholder: 'Título da Notificação',
-                      onSaved: (value) {
-                        //controller.title = value!;
+                      onSaved: (title) {
+                        controller.copyWith(title: title);
                       },
                       prefix: const Padding(
                         padding: EdgeInsetsDirectional.only(start: 8.0),
@@ -125,8 +131,8 @@ class _HomePageState extends State<HomePage> {
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       minLines: 1,
-                      onSaved: (value) {
-                        //controller.description = value!;
+                      onSaved: (description) {
+                        controller.copyWith(description: description);
                       },
                       prefix: const Padding(
                         padding: EdgeInsetsDirectional.only(start: 8.0),
@@ -159,7 +165,12 @@ class _HomePageState extends State<HomePage> {
                       keyTitulo.currentState!.save();
                       keyDesc.currentState!.save();
 
-                      //await controller.enviarNotificacao();
+                      if (await controller.createNotification()) {
+                        print('criou');
+                      } else {
+                        print('nao criou');
+                      }
+                      ;
                     },
                   )
                   // : Center(
@@ -180,15 +191,15 @@ class _HomePageState extends State<HomePage> {
                         itemBuilder: (_, int index) {
                           return mt.ListTile(
                             onTap: () {
-                              tituloController.text =
-                                  controller.notificationEntity[index].title;
+                              tituloController.text = controller
+                                  .listNotificationEntity[index].title;
                               descricaoController.text = controller
-                                  .notificationEntity[index].description;
+                                  .listNotificationEntity[index].description;
                             },
                             title: Text(
-                                controller.notificationEntity[index].title),
+                                controller.listNotificationEntity[index].title),
                             subtitle: Text(controller
-                                .notificationEntity[index].description),
+                                .listNotificationEntity[index].description),
                             trailing: GestureDetector(
                               child: Icon(FluentIcons.delete),
                               onTap: () async {},
@@ -196,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                         separatorBuilder: (_, __) => SizedBox(height: 10),
-                        itemCount: controller.notificationEntity.length,
+                        itemCount: controller.listNotificationEntity.length,
                       ),
                     ),
                   )

@@ -8,4 +8,15 @@ class NotificationEntity {
     required this.title,
     required this.description,
   });
+
+  NotificationEntity copyWith({
+    String? title,
+    String? description,
+  }) {
+    return NotificationEntity(
+      id: 0,
+      title: title ?? this.title,
+      description: description ?? this.description,
+    );
+  }
 }

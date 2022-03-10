@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:notificacoes_push_android/layers/data/datasourcers/local/get_all_notification_local_datasource_imp.dart';
+import 'package:notificacoes_push_android/layers/data/datasourcers/get_all_notification_datasource/local/get_all_notification_local_datasource_imp.dart';
 import 'package:notificacoes_push_android/layers/data/repositories/get_all_notification_repository_imp.dart';
 import 'package:notificacoes_push_android/layers/domain/entities/notification_entity.dart';
 import 'package:notificacoes_push_android/layers/domain/usecases/get_all_notification/get_all_notificatin_usecase.dart';
@@ -13,6 +13,10 @@ main() {
 
     var result = await useCase();
 
-    expect(result, isInstanceOf<List<NotificationEntity>>());
+    late List<NotificationEntity> resultExpect;
+
+    result.fold((l) => null, (r) => resultExpect = r);
+
+    expect(resultExpect, isInstanceOf<List<NotificationEntity>>());
   });
 }

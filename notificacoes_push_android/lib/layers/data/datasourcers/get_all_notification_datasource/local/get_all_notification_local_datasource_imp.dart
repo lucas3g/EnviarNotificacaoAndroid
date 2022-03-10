@@ -1,4 +1,5 @@
-import 'package:notificacoes_push_android/layers/data/datasourcers/get_all_notification_datasource.dart';
+import 'package:dartz/dartz.dart';
+import 'package:notificacoes_push_android/layers/data/datasourcers/get_all_notification_datasource/get_all_notification_datasource.dart';
 import 'package:notificacoes_push_android/layers/data/dtos/notification_dto.dart';
 import 'package:notificacoes_push_android/layers/database/db.dart';
 import 'package:sqflite/sqflite.dart';
@@ -8,7 +9,7 @@ class GetAllNotificationLocalDataSourceImp
   late Database db;
 
   @override
-  Future<List<NotificationDto>> call() async {
+  Future<Either<Exception, List<NotificationDto>>> call() async {
     try {
       db = await DB.instance.db;
 
@@ -28,9 +29,9 @@ class GetAllNotificationLocalDataSourceImp
         }
       });
 
-      return notificationDto;
+      return Right(notificationDto);
     } catch (e) {
-      return [];
+      return Left(Exception('error get'));
     }
   }
 }
