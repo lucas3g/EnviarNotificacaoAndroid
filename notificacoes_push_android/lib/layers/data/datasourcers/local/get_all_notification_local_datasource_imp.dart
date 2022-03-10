@@ -1,6 +1,6 @@
-import 'package:notificacoes_push_android/database/db.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/get_all_notification_datasource.dart';
 import 'package:notificacoes_push_android/layers/data/dtos/notification_dto.dart';
+import 'package:notificacoes_push_android/layers/database/db.dart';
 import 'package:sqflite/sqflite.dart';
 
 class GetAllNotificationLocalDataSourceImp
