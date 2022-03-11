@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as mt;
 import 'package:get_it/get_it.dart';
 import 'package:notificacoes_push_android/layers/presentation/controllers/notification_controller.dart';
+import 'package:notificacoes_push_android/layers/presentation/controllers/notification_status.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -27,45 +28,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     getAllNotifications();
-  }
 
-  void mostraAlerta(
-      {required String titulo,
-      required String descricao,
-      String textBotao = 'Entendido'}) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return ContentDialog(
-          title: Text(
-            titulo,
-            style: TextStyle(fontSize: 14),
-          ),
-          content: Text(descricao),
-          actions: [
-            Button(
-              style: ButtonStyle(
-                backgroundColor: ButtonState.all(Colors.blue),
-                elevation: ButtonState.all(5),
-                shadowColor: ButtonState.all(Colors.blue),
-              ),
-              child: Center(
-                child: Text(
-                  textBotao,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
-        );
-      },
-    );
+    controller.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -123,47 +89,44 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Button(
-                    style: ButtonStyle(
-                      backgroundColor: ButtonState.all(Colors.blue),
-                      elevation: ButtonState.all(5),
-                      shadowColor: ButtonState.all(Colors.blue),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Enviar Notificação',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                  controller.status != NotificationStatus.loading
+                      ? Button(
+                          style: ButtonStyle(
+                            backgroundColor: ButtonState.all(Colors.blue),
+                            elevation: ButtonState.all(5),
+                            shadowColor: ButtonState.all(Colors.blue),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Enviar Notificação',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          onPressed: () async {
+                            if ((!keyTitulo.currentState!.validate()) ||
+                                (!keyDesc.currentState!.validate())) {
+                              return;
+                            }
+
+                            keyTitulo.currentState!.save();
+                            keyDesc.currentState!.save();
+
+                            if (await controller.sendNotification(
+                                context: context)) {
+                              getAllNotifications();
+                            }
+                          },
+                        )
+                      : Center(
+                          child: Container(
+                            height: 30,
+                            width: 30,
+                            child: mt.CircularProgressIndicator(),
+                          ),
                         ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      if ((!keyTitulo.currentState!.validate()) ||
-                          (!keyDesc.currentState!.validate())) {
-                        return;
-                      }
-
-                      keyTitulo.currentState!.save();
-                      keyDesc.currentState!.save();
-
-                      if (await controller.createNotification()) {
-                        setState(() {
-                          getAllNotifications();
-                        });
-                      } else {
-                        print('nao criou');
-                      }
-                      ;
-                    },
-                  )
-                  // : Center(
-                  //     child: Container(
-                  //       height: 30,
-                  //       width: 30,
-                  //       child: mt.CircularProgressIndicator(),
-                  //     ),
-                  //   ),
                 ],
               ),
               Row(
@@ -191,9 +154,8 @@ class _HomePageState extends State<HomePage> {
                                   id: controller
                                       .listNotificationEntity[index].id,
                                 );
-                                setState(() {
-                                  getAllNotifications();
-                                });
+
+                                getAllNotifications();
                               },
                             ),
                           );
