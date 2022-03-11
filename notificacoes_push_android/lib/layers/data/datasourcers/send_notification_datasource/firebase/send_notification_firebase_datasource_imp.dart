@@ -3,13 +3,10 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/send_notification_datasource/send_notification_datasource.dart';
 import 'package:notificacoes_push_android/layers/domain/entities/notification_entity.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
 
 class SendNotificationFireBaseDataSourceImp
     implements SendNotificationDataSource {
-  late Database db;
-
   @override
   Future<Either<Exception, bool>> call(
       {required NotificationEntity notificationEntity}) async {

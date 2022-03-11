@@ -1,17 +1,22 @@
 import 'package:dartz/dartz.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/get_all_notification_datasource/get_all_notification_datasource.dart';
 import 'package:notificacoes_push_android/layers/data/dtos/notification_dto.dart';
-import 'package:notificacoes_push_android/layers/database/db.dart';
+import 'package:notificacoes_push_android/layers/domain/usecases/init_database/init_database_usecase.dart';
 import 'package:sqflite/sqflite.dart';
 
 class GetAllNotificationLocalDataSourceImp
     implements GetAllNotificationDataSource {
   late Database db;
 
+  InitDatabaseUseCase _initDatabaseUseCase;
+
+  GetAllNotificationLocalDataSourceImp(this._initDatabaseUseCase);
+
   @override
   Future<Either<Exception, List<NotificationDto>>> call() async {
     try {
-      db = await DB.instance.db;
+      final result = _initDatabaseUseCase();
+      await result.then((value) => db = value.getOrElse(() => db));
 
       final List<NotificationDto> notificationDto = [];
 
