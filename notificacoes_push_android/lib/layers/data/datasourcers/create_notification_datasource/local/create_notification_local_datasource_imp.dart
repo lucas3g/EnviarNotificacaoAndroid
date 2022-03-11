@@ -6,8 +6,6 @@ import 'package:sqflite/sqflite.dart';
 
 class CreateNotificationLocalDataSourceImp
     implements CreateNotificationDataSource {
-  late Database db;
-
   InitDatabaseUseCase _initDatabaseUseCase;
 
   CreateNotificationLocalDataSourceImp(this._initDatabaseUseCase);
@@ -16,14 +14,21 @@ class CreateNotificationLocalDataSourceImp
   Future<Either<Exception, bool>> call(
       {required NotificationEntity notificationEntity}) async {
     try {
-      final result = _initDatabaseUseCase();
-      await result.then((value) => db = value.getOrElse(() => db));
+      final Database db = await _initDatabaseUseCase();
 
       await db.transaction((txn) async {
-        await txn.insert('notifications', {
-          'title': notificationEntity.title,
-          'description': notificationEntity.description,
-        });
+        final result = await txn.query('notifications',
+            where: 'title = ? and description = ?',
+            whereArgs: [
+              notificationEntity.title,
+              notificationEntity.description
+            ]);
+        if (result.isEmpty) {
+          await txn.insert('notifications', {
+            'title': notificationEntity.title,
+            'description': notificationEntity.description,
+          });
+        }
       });
       return Right(true);
     } catch (e) {

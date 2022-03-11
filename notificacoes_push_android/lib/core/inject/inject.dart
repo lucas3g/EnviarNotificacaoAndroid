@@ -36,6 +36,9 @@ class Inject {
     GetIt getIt = GetIt.instance;
 
     //DATASOURCES
+    getIt.registerLazySingleton<InitDatabaseDataSource>(
+      () => InitDatabaseDataSourceImp(),
+    );
     getIt.registerLazySingleton<GetAllNotificationDataSource>(
       () => GetAllNotificationLocalDataSourceImp(getIt()),
     );
@@ -43,13 +46,10 @@ class Inject {
       () => CreateNotificationLocalDataSourceImp(getIt()),
     );
     getIt.registerLazySingleton<DeleteNotificationDataSource>(
-      () => DeleteNotificationLocalDataSourceImp(),
+      () => DeleteNotificationLocalDataSourceImp(getIt()),
     );
     getIt.registerLazySingleton<SendNotificationDataSource>(
       () => SendNotificationFireBaseDataSourceImp(),
-    );
-    getIt.registerLazySingleton<InitDatabaseDataSource>(
-      () => InitDatabaseDataSourceImp(),
     );
 
     //REPOSITORIES

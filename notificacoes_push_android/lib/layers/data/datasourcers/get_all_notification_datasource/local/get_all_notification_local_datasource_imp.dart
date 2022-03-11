@@ -6,8 +6,6 @@ import 'package:sqflite/sqflite.dart';
 
 class GetAllNotificationLocalDataSourceImp
     implements GetAllNotificationDataSource {
-  late Database db;
-
   InitDatabaseUseCase _initDatabaseUseCase;
 
   GetAllNotificationLocalDataSourceImp(this._initDatabaseUseCase);
@@ -15,8 +13,7 @@ class GetAllNotificationLocalDataSourceImp
   @override
   Future<Either<Exception, List<NotificationDto>>> call() async {
     try {
-      final result = _initDatabaseUseCase();
-      await result.then((value) => db = value.getOrElse(() => db));
+      final Database db = await _initDatabaseUseCase();
 
       final List<NotificationDto> notificationDto = [];
 
