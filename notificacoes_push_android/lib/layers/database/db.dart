@@ -23,6 +23,7 @@ class DB {
     String databasePath = await databaseFactoryFfi.getDatabasesPath();
     String path = join(databasePath, 'notification.db');
     DatabaseFactory databaseFactory = databaseFactoryFfi;
+
     if (_db == null) {
       _db = await databaseFactory.openDatabase(
         path,
@@ -32,6 +33,7 @@ class DB {
         ),
       );
     }
+
     return _db!;
   }
 

@@ -1,22 +1,26 @@
 import 'package:dartz/dartz.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/delete_notification_datasource/delete_notification_datasource.dart';
-import 'package:notificacoes_push_android/layers/domain/usecases/init_database/init_database_usecase.dart';
-import 'package:sqflite/sqflite.dart';
+
+import '../../../../services/local_storage/helpers/local_storage_tables.dart';
+import '../../../../services/local_storage/helpers/params.dart';
+import '../../../../services/local_storage/local_storage_service.dart';
 
 class DeleteNotificationLocalDataSourceImp
     implements DeleteNotificationDataSource {
-  InitDatabaseUseCase _initDatabaseUseCase;
+  final LocalStorageService _localStorageService;
 
-  DeleteNotificationLocalDataSourceImp(this._initDatabaseUseCase);
+  DeleteNotificationLocalDataSourceImp({
+    required LocalStorageService localStorageService,
+  }) : _localStorageService = localStorageService;
 
   @override
   Future<Either<Exception, bool>> call({required int id}) async {
     try {
-      final Database db = await _initDatabaseUseCase();
-
-      await db.transaction((txn) async {
-        await txn.delete('notifications', where: 'id = ?', whereArgs: [id]);
-      });
+      final param = LocalStorageDeleteParam(
+        table: LocalStorageTables.notifications,
+        id: id,
+      );
+      await _localStorageService.delete(param);
 
       return Right(true);
     } catch (e) {

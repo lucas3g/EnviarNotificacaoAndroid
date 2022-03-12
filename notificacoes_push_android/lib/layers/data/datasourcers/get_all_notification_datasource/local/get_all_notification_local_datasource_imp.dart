@@ -1,35 +1,29 @@
 import 'package:dartz/dartz.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/get_all_notification_datasource/get_all_notification_datasource.dart';
 import 'package:notificacoes_push_android/layers/data/dtos/notification_dto.dart';
-import 'package:notificacoes_push_android/layers/domain/usecases/init_database/init_database_usecase.dart';
-import 'package:sqflite/sqflite.dart';
+
+import '../../../../services/local_storage/helpers/local_storage_tables.dart';
+import '../../../../services/local_storage/helpers/params.dart';
+import '../../../../services/local_storage/local_storage_service.dart';
 
 class GetAllNotificationLocalDataSourceImp
     implements GetAllNotificationDataSource {
-  InitDatabaseUseCase _initDatabaseUseCase;
+  final LocalStorageService _localStorageService;
 
-  GetAllNotificationLocalDataSourceImp(this._initDatabaseUseCase);
+  GetAllNotificationLocalDataSourceImp({
+    required LocalStorageService localStorageService,
+  }) : _localStorageService = localStorageService;
 
   @override
   Future<Either<Exception, List<NotificationDto>>> call() async {
     try {
-      final Database db = await _initDatabaseUseCase();
+      final param = LocalStorageGetAllParam(
+        table: LocalStorageTables.notifications,
+      );
 
-      final List<NotificationDto> notificationDto = [];
+      final response = await _localStorageService.getAll(param);
 
-      await db.transaction((txn) async {
-        final List allNotification = await txn.query(
-          'notifications',
-        );
-
-        if (allNotification.isNotEmpty) {
-          for (var item in allNotification) {
-            notificationDto.add(
-              NotificationDto.fromMap(item),
-            );
-          }
-        }
-      });
+      final notificationDto = response.map(NotificationDto.fromMap).toList();
 
       return Right(notificationDto);
     } catch (e) {

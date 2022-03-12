@@ -1,0 +1,1 @@
+enum LocalStorageTables { notifications }

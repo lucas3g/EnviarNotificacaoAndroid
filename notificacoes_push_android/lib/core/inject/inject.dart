@@ -31,22 +31,48 @@ import 'package:notificacoes_push_android/layers/domain/usecases/send_notificati
 import 'package:notificacoes_push_android/layers/domain/usecases/send_notification/send_notification_usecase_imp.dart';
 import 'package:notificacoes_push_android/layers/presentation/controllers/notification_controller.dart';
 
+import '../../layers/services/local_storage/helpers/params.dart';
+import '../../layers/services/local_storage/helpers/table_entity.dart';
+import '../../layers/services/local_storage/local_storage_service.dart';
+import '../../layers/services/local_storage/sqflite/sqflite_local_storage_service_imp.dart';
+
 class Inject {
   static void init() {
     GetIt getIt = GetIt.instance;
+
+    // LOCAL STORAGE SERVICE
+    getIt.registerLazySingleton<LocalStorageService>(
+      () {
+        final service = SqfliteLocalStorageServiceImp();
+        final fields = {
+          TableFieldEntity(name: 'id', type: FieldType.integer, pk: true),
+          TableFieldEntity(name: 'title', type: FieldType.string),
+          TableFieldEntity(name: 'description', type: FieldType.string),
+        };
+        final table = TableEntity(name: 'notifications', fields: fields);
+
+        final param = LocalStorageInitParam(
+          fileName: 'notifications.db',
+          tables: {table},
+        );
+        service.init(param);
+
+        return service;
+      },
+    );
 
     //DATASOURCES
     getIt.registerLazySingleton<InitDatabaseDataSource>(
       () => InitDatabaseDataSourceImp(),
     );
     getIt.registerLazySingleton<GetAllNotificationDataSource>(
-      () => GetAllNotificationLocalDataSourceImp(getIt()),
+      () => GetAllNotificationLocalDataSourceImp(localStorageService: getIt()),
     );
     getIt.registerLazySingleton<CreateNotificationDataSource>(
-      () => CreateNotificationLocalDataSourceImp(getIt()),
+      () => CreateNotificationLocalDataSourceImp(localStorageService: getIt()),
     );
     getIt.registerLazySingleton<DeleteNotificationDataSource>(
-      () => DeleteNotificationLocalDataSourceImp(getIt()),
+      () => DeleteNotificationLocalDataSourceImp(localStorageService: getIt()),
     );
     getIt.registerLazySingleton<SendNotificationDataSource>(
       () => SendNotificationFireBaseDataSourceImp(),
