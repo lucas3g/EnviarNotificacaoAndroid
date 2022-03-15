@@ -15,4 +15,4 @@ class FilterEntity extends Equatable {
   List<Object?> get props => [name, value, type];
 }
 
-enum FilterType { equal }
+enum FilterType { equal, containing }

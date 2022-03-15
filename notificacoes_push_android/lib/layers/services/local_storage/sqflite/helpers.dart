@@ -30,6 +30,8 @@ class SqFliteHelpers {
     switch (filterType) {
       case FilterType.equal:
         return '=';
+      case FilterType.containing:
+        return 'containing';
     }
   }
 

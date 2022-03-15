@@ -5,4 +5,6 @@ abstract class LocalStorageService {
   Future<void> create(LocalStorageCreateParam param);
   Future<void> delete(LocalStorageDeleteParam param);
   Future<List<Map<String, dynamic>>> getAll(LocalStorageGetAllParam param);
+  Future<List<Map<String, dynamic>>> getPerFilter(
+      LocalStorageGetPerFilterParam param);
 }

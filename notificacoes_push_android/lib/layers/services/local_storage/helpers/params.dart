@@ -24,9 +24,17 @@ class LocalStorageDeleteParam {
 
 class LocalStorageGetAllParam {
   final LocalStorageTables table;
-  final Set<FilterEntity>? filters;
 
   LocalStorageGetAllParam({
+    required this.table,
+  });
+}
+
+class LocalStorageGetPerFilterParam {
+  final LocalStorageTables table;
+  final Set<FilterEntity>? filters;
+
+  LocalStorageGetPerFilterParam({
     required this.table,
     this.filters,
   });

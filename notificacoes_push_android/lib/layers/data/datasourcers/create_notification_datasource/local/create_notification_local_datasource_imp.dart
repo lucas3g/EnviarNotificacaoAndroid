@@ -20,7 +20,7 @@ class CreateNotificationLocalDataSourceImp
     required NotificationEntity notificationEntity,
   }) async {
     try {
-      final param = LocalStorageGetAllParam(
+      final param = LocalStorageGetPerFilterParam(
         table: LocalStorageTables.notifications,
         filters: {
           FilterEntity(
@@ -36,7 +36,7 @@ class CreateNotificationLocalDataSourceImp
         },
       );
 
-      final response = await _localStorageService.getAll(param);
+      final response = await _localStorageService.getPerFilter(param);
 
       if (response.isEmpty) {
         final param = LocalStorageCreateParam(

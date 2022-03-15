@@ -1,28 +1,27 @@
 import 'package:dartz/dartz.dart';
-import 'package:notificacoes_push_android/layers/data/datasourcers/get_all_notification_datasource/get_all_notification_datasource.dart';
+import 'package:notificacoes_push_android/layers/data/datasourcers/get_notification_per_filter_datasource/get_notification_per_filter_datasource.dart';
 import 'package:notificacoes_push_android/layers/data/dtos/notification_dto.dart';
 
 import '../../../../services/local_storage/helpers/local_storage_tables.dart';
 import '../../../../services/local_storage/helpers/params.dart';
 import '../../../../services/local_storage/local_storage_service.dart';
 
-class GetAllNotificationLocalDataSourceImp
-    implements GetAllNotificationDataSource {
+class GetNotificationPerFilterLocalDataSourceImp
+    implements GetNotificationPerFilterDataSource {
   final LocalStorageService _localStorageService;
 
-  GetAllNotificationLocalDataSourceImp({
+  GetNotificationPerFilterLocalDataSourceImp({
     required LocalStorageService localStorageService,
   }) : _localStorageService = localStorageService;
 
   @override
   Future<Either<Exception, List<NotificationDto>>> call() async {
     try {
-      final param = LocalStorageGetAllParam(
+      final param = LocalStorageGetPerFilterParam(
         table: LocalStorageTables.notifications,
       );
-      await Future.delayed(Duration(milliseconds: 300));
 
-      final response = await _localStorageService.getAll(param);
+      final response = await _localStorageService.getPerFilter(param);
 
       final notificationDto = response.map(NotificationDto.fromMap).toList();
 
