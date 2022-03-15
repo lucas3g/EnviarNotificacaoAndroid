@@ -2,27 +2,23 @@ import 'package:notificacoes_push_android/layers/domain/entities/notification_en
 
 abstract class NotificationState {}
 
-class EmptyNotifcationState extends NotificationState {}
+class EmptyNotificationState extends NotificationState {}
 
 class LoadingNotifcationState extends NotificationState {}
 
-class LoadingMoreNotifcationState extends NotificationState {}
-
-class DeleteNotifcationState extends NotificationState {}
-
-class SucessNotifcationState extends NotificationState {
+class SuccessNotificationState extends NotificationState {
   final List<NotificationEntity> notifications;
 
-  SucessNotifcationState({
+  SuccessNotificationState({
     required this.notifications,
   });
 }
 
-class ErrorNotifcationState extends NotificationState {
+class ErrorNotificationState extends NotificationState {
   final String message;
   final StackTrace? stackTrace;
 
-  ErrorNotifcationState({
+  ErrorNotificationState({
     required this.message,
     this.stackTrace,
   });

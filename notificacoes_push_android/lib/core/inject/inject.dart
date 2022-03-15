@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:notificacoes_push_android/layers/bloc/notification_bloc/notification_bloc.dart';
+import 'package:notificacoes_push_android/layers/bloc/send_notification_bloc/send_notification_bloc.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/create_notification_datasource/create_notification_datasource.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/create_notification_datasource/local/create_notification_local_datasource_imp.dart';
 import 'package:notificacoes_push_android/layers/data/datasourcers/delete_notification_datasource/delete_notification_datasource.dart';
@@ -116,6 +117,8 @@ class Inject {
 
     //BLOC
     getIt.registerLazySingleton<NotificationBloc>(
-        () => NotificationBloc(getIt(), getIt(), getIt(), getIt()));
+        () => NotificationBloc(getIt(), getIt(), getIt()));
+    getIt.registerLazySingleton<SendNotificationBloc>(
+        () => SendNotificationBloc(getIt()));
   }
 }
