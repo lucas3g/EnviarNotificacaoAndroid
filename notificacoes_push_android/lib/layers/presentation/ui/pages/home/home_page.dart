@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notificacoes_push_android/layers/bloc/events/notification_events/notification_events.dart';
+import 'package:notificacoes_push_android/layers/bloc/events/send_notification_events/notification_events.dart';
 import 'package:notificacoes_push_android/layers/bloc/notification_bloc/notification_bloc.dart';
 import 'package:notificacoes_push_android/layers/bloc/send_notification_bloc/send_notification_bloc.dart';
 import 'package:notificacoes_push_android/layers/bloc/states/notification_state/notification_state.dart';

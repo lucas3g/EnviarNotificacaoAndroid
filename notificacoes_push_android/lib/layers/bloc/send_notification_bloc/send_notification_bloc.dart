@@ -15,7 +15,7 @@ class SendNotificationBloc
   NotificationEntity notificationEntity =
       NotificationEntity(id: 0, title: '', description: '');
 
-  Future<bool> _sendNotification(SendNotificationEvents event, emit) async {
+  Future<bool> _sendNotification(SendNotificationEvent event, emit) async {
     emit(LoadingSendNotifcationState());
     final result =
         await _sendNotificationUseCase(notificationEntity: notificationEntity);
