@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:notificacoes_push_android/layers/bloc/events/notification_events/notification_events.dart';
+import 'package:notificacoes_push_android/layers/bloc/events/send_notification_events/notification_events.dart';
 import 'package:notificacoes_push_android/layers/bloc/states/send_notification_state/send_notification_state.dart';
 import 'package:notificacoes_push_android/layers/domain/entities/notification_entity.dart';
 import 'package:notificacoes_push_android/layers/domain/usecases/send_notification/send_notification_usecase.dart';
 
 class SendNotificationBloc
-    extends Bloc<SendNotificationEvent, SendNotificationState> {
+    extends Bloc<SendNotificationEvents, SendNotificationState> {
   final SendNotificationUseCase _sendNotificationUseCase;
   SendNotificationBloc(this._sendNotificationUseCase)
       : super(EmptySendNotificationState()) {
@@ -15,7 +15,7 @@ class SendNotificationBloc
   NotificationEntity notificationEntity =
       NotificationEntity(id: 0, title: '', description: '');
 
-  Future<bool> _sendNotification(SendNotificationEvent event, emit) async {
+  Future<bool> _sendNotification(SendNotificationEvents event, emit) async {
     emit(LoadingSendNotifcationState());
     final result =
         await _sendNotificationUseCase(notificationEntity: notificationEntity);

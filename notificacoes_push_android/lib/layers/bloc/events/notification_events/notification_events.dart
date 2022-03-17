@@ -19,5 +19,3 @@ class DeleteNotificationEvent extends NotificationEvents {
     required this.id,
   });
 }
-
-class SendNotificationEvent extends NotificationEvents {}
