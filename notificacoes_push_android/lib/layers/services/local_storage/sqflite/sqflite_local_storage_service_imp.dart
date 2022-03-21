@@ -37,7 +37,7 @@ class SqfliteLocalStorageServiceImp implements LocalStorageService {
   Future<List<Map<String, dynamic>>> getAll(
       LocalStorageGetAllParam param) async {
     try {
-      late List<Map<String, dynamic>> result;
+      List<Map<String, dynamic>> result = [];
 
       await _db!.transaction((txn) async {
         result = await txn.query(

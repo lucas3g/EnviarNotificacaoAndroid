@@ -20,7 +20,8 @@ class GetAllNotificationLocalDataSourceImp
       final param = LocalStorageGetAllParam(
         table: LocalStorageTables.notifications,
       );
-      await Future.delayed(Duration(milliseconds: 300));
+
+      await Future.delayed(Duration(seconds: 1));
 
       final response = await _localStorageService.getAll(param);
 

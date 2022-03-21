@@ -36,9 +36,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      return controller.add(GetAllNotificationEvent());
-    });
+    controller.add(GetAllNotificationEvent());
 
     sub = sendController.stream.listen((state) {
       switch (state.runtimeType) {
