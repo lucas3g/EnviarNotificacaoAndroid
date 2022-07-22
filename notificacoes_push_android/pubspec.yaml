@@ -34,7 +34,6 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  fluent_ui: ^3.9.0
   flutter_acrylic: ^1.0.0+1
   dio: ^4.0.4
   http: ^0.13.4
@@ -108,8 +107,6 @@ msix_config:
   publisher: CN=EL Sistemas, O=EL Sistemas, L=Lucas, S=Lucas, C=BR
   architecture: x64
   msix_version: 1.0.0.0
-  certificate_path: C:\Users\Lucas Silva\CERTIFICATE.pfx
-  certificate_password: 12345678
   logo_path: C:\Users\Lucas Silva\Desktop\EnviarNotificacaoAndroid\notificacoes_push_android\assets\images\logo.png
   start_menu_icon_path: C:\Users\Lucas Silva\Desktop\EnviarNotificacaoAndroid\notificacoes_push_android\assets\images\icon.png
   tile_icon_path: C:\Users\Lucas Silva\Desktop\EnviarNotificacaoAndroid\notificacoes_push_android\assets\images\icon.png

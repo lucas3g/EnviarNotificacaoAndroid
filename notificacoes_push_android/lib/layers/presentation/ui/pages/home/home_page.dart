@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' as mt;
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -81,18 +80,18 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) {
-        return ContentDialog(
+        return AlertDialog(
           title: Text(
             titulo,
             style: TextStyle(fontSize: 14),
           ),
           content: Text(descricao),
           actions: [
-            Button(
+            ElevatedButton(
               style: ButtonStyle(
-                backgroundColor: ButtonState.all(Colors.blue),
-                elevation: ButtonState.all(5),
-                shadowColor: ButtonState.all(Colors.blue),
+                backgroundColor: MaterialStateProperty.all(Colors.blue),
+                elevation: MaterialStateProperty.all(5),
+                shadowColor: MaterialStateProperty.all(Colors.blue),
               ),
               child: Center(
                 child: Text(
@@ -115,8 +114,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Acrylic(
-      child: Padding(
+    return Scaffold(
+      body: Padding(
         padding: const EdgeInsets.all(20),
         child: GridView.count(
           crossAxisCount: 2,
@@ -125,53 +124,46 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Form(
                   key: keyTitulo,
-                  child: TextFormBox(
+                  child: TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     focusNode: fTitle,
                     controller: tituloController,
-                    header: 'Título',
+                    decoration: InputDecoration(
+                      label: Text('Título'),
+                      hintText: 'Título da Notificação',
+                      isDense: true,
+                    ),
                     validator: (text) {
                       if (text == null || text.isEmpty)
                         return 'Digite um título';
                       return null;
                     },
-                    placeholder: 'Título da Notificação',
                     onSaved: (title) {
                       sendController.copyWith(title: title);
                     },
                     onFieldSubmitted: (_) {
                       fDescription.requestFocus();
                     },
-                    prefix: const Padding(
-                      padding: EdgeInsetsDirectional.only(start: 8.0),
-                      child: Icon(FluentIcons.title),
-                    ),
                   ),
                 ),
                 SizedBox(height: 10),
                 Form(
                   key: keyDesc,
-                  child: TextFormBox(
+                  child: TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     focusNode: fDescription,
                     controller: descricaoController,
-                    header: 'Descrição',
-                    validator: (text) {
-                      if (text == null || text.isEmpty)
-                        return 'Digite uma descrição';
-                      return null;
-                    },
-                    placeholder: 'Descrição da Notificação',
+                    decoration: InputDecoration(
+                      label: Text('Descrição'),
+                      hintText: 'Descrição da Notificação',
+                      isDense: true,
+                    ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     minLines: 1,
                     onSaved: (description) {
                       sendController.copyWith(description: description);
                     },
-                    prefix: const Padding(
-                      padding: EdgeInsetsDirectional.only(start: 8.0),
-                      child: Icon(FluentIcons.list),
-                    ),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -181,11 +173,13 @@ class _HomePageState extends State<HomePage> {
                       return state is SucessSendNotificationState ||
                               state is ErrorSendNotificationState ||
                               state is EmptySendNotificationState
-                          ? Button(
+                          ? ElevatedButton(
                               style: ButtonStyle(
-                                backgroundColor: ButtonState.all(Colors.blue),
-                                elevation: ButtonState.all(5),
-                                shadowColor: ButtonState.all(Colors.blue),
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.blue),
+                                elevation: MaterialStateProperty.all(5),
+                                shadowColor:
+                                    MaterialStateProperty.all(Colors.blue),
                               ),
                               child: Center(
                                 child: Text(
@@ -212,7 +206,7 @@ class _HomePageState extends State<HomePage> {
                               child: Container(
                                 height: 30,
                                 width: 30,
-                                child: mt.CircularProgressIndicator(),
+                                child: CircularProgressIndicator(),
                               ),
                             );
                     })
@@ -220,7 +214,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Row(
               children: [
-                mt.VerticalDivider(),
+                VerticalDivider(),
                 BlocBuilder<NotificationBloc, NotificationState>(
                     bloc: controller,
                     builder: (context, state) {
@@ -229,7 +223,7 @@ class _HomePageState extends State<HomePage> {
                               child: Container(
                                 child: ListView.separated(
                                   itemBuilder: (_, int index) {
-                                    return mt.ListTile(
+                                    return ListTile(
                                       onTap: () {
                                         tituloController.text =
                                             state.notifications[index].title;
@@ -243,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                                         state.notifications[index].description,
                                       ),
                                       trailing: GestureDetector(
-                                        child: Icon(FluentIcons.delete),
+                                        child: Icon(Icons.delete),
                                         onTap: () async {
                                           controller.add(
                                             DeleteNotificationEvent(
@@ -266,7 +260,7 @@ class _HomePageState extends State<HomePage> {
                                     child: Container(
                                       height: 30,
                                       width: 30,
-                                      child: mt.CircularProgressIndicator(),
+                                      child: CircularProgressIndicator(),
                                     ),
                                   ),
                                 )
